@@ -1,8 +1,8 @@
 # ShopSense — analysing handwritten credit book
 
-My father runs a small kirana (grocery) store in Bengaluru. Regular customers buy on credit, and he writes every visit in a paper notebook (a *khata*): date + amount. Customers settle up at the start of the next month — some in full, some leaving a balance.
+A small kirana (grocery) store in Bengaluru sells to regular customers on credit, and every visit is written in a paper notebook (a *khata*): date + amount. Customers settle up at the start of the next month — some in full, some leaving a balance.
 
-I turned that notebook into data to answer the questions he actually has:
+I turned that notebook into data to answer the questions the shop owner actually has:
 
 1. **Who isn't paying, and where is our money stuck?**
 2. **How much does the shop depend on its biggest customers?** (concentration risk)
@@ -15,15 +15,15 @@ I turned that notebook into data to answer the questions he actually has:
 ## The data
 
 - **3,065 handwritten entries**, **29 customers**, **46 book pages**, Nov 2021 – Apr 2025, transcribed from phone photos.
-- Every customer's balance was **reconciled to the totals my father wrote** in the book. Where his total and the lines disagreed (amounts added without a line, round-offs let go when paying), the gap is recorded as an `Adjustment` row, so balances from the data equal his balances.
-- Unclear entries (overwritten digits, cut-off photos) are flagged `CHECK:` in the notes — 31 rows — to confirm with him.
+- Every customer's balance was **reconciled to the totals written in the book**. Where a written total and the lines disagreed (amounts added without a line, round-offs let go when paying), the gap is recorded as an `Adjustment` row, so balances from the data equal the book's balances.
+- Unclear entries (overwritten digits, cut-off photos) are flagged `CHECK:` in the notes — 31 rows — to confirm with the shop owner.
 - **Privacy:** customers are anonymised as `CUST_001`…`CUST_029`. The workbook in this repo is a public copy with the customer-names column removed; real names stay only in my private copy.
 
 | Column | Meaning |
 |---|---|
 | `entry_type` | `Purchase`, `Payment`, `Old_Balance` (dues from before the page) or `Adjustment` |
 | `amount` | ₹ |
-| `written_balance` | the total / *BAKI* (balance) my father wrote, where he wrote one — used as a checkpoint |
+| `written_balance` | the total / *BAKI* (balance) written in the book, where there is one — used as a checkpoint |
 
 ## How it's built
 
@@ -78,7 +78,7 @@ One page (screenshot at the top): KPI cards (total owed, credit sales, customers
 
 - **₹1,25,321 is waiting to be collected.** Three customers hold ₹39,581 of it (CUST_013 ₹16,273, CUST_019 ₹13,007, CUST_001 ₹10,301).
 - **Concentration risk:** one customer is **20%** of all credit sales; the top 5 are **46%**.
-- **84.7%** of everything billed has been paid. **8 customers have paid less than 70%** — all but one are ones my father already labels "carries forward". (CUST_029 is red only because its February bill was still open where the photographed page ends.)
+- **84.7%** of everything billed has been paid. **8 customers have paid less than 70%** — all but one are customers the shop already labels "carries forward". (CUST_029 is red only because its February bill was still open where the photographed page ends.)
 - **Labels vs reality:** three older customers labelled "pays in full" (CUST_007, CUST_015, CUST_018) still owe ₹3,000–9,000.
 - **Early warning:** CUST_001's visits fell from 23 (Jan 2025) to 13, then 8, then none in April — while still owing ₹10,301. Other customers kept buying that month, so the shop wasn't closed.
 
@@ -116,4 +116,4 @@ refresh_mysql.bat   one-click: saved Excel → checks → MySQL (rolls back on a
 
 - Different customers' pages cover different years, so "owes now" means *as of that customer's last photographed page*.
 - About half the payments have no date, which limits payment timing analysis.
-- Next: a monthly one-page report for my father (real names, kept private), and photographing the newest pages so the numbers are current.
+- Next: a monthly one-page report for the shop owner (real names, kept private), and photographing the newest pages so the numbers are current.
