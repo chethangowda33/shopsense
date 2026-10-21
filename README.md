@@ -17,7 +17,7 @@ I turned that notebook into data to answer the questions he actually has:
 - **3,065 handwritten entries**, **29 customers**, **46 book pages**, Nov 2021 – Apr 2025, transcribed from phone photos.
 - Every customer's balance was **reconciled to the totals my father wrote** in the book. Where his total and the lines disagreed (amounts added without a line, round-offs let go when paying), the gap is recorded as an `Adjustment` row, so balances from the data equal his balances.
 - Unclear entries (overwritten digits, cut-off photos) are flagged `CHECK:` in the notes — 31 rows — to confirm with him.
-- **Privacy:** customers are anonymised as `CUST_001`…`CUST_029`. Real names live only in a private workbook that is not in this repo.
+- **Privacy:** customers are anonymised as `CUST_001`…`CUST_029`. The workbook in this repo is a public copy with the customer-names column removed; real names stay only in my private copy.
 
 | Column | Meaning |
 |---|---|
@@ -38,6 +38,41 @@ Phone photos → Excel (enter + verify) → MySQL (store + query) ─┬→ Powe
 | **MySQL** | Single source of truth; balances with `CASE WHEN`, `JOIN`s, CTEs, window functions (`RANK`, `LAG`, `SUM() OVER()`), a `customer_summary` view for Power BI |
 | **Power BI** | Live dashboard on MySQL: KPI cards, who owes most, who buys most, monthly trend, customer slicer, % paid table with red flags |
 | **Python** | pandas analysis of payment gaps, a next-payment prediction with backtesting, and a one-click Excel → MySQL refresh with validation |
+
+## Excel workbook
+
+[`excel/ShopSense_Analysis.xlsx`](excel/ShopSense_Analysis.xlsx) — the full workbook (customer names removed). GitHub can't preview Excel files, so download it to explore.
+
+| Sheet | What it shows |
+|---|---|
+| **Ledger** | Excel Table with all 3,065 entries, plus Month and Customer_Type (XLOOKUP) columns |
+| **Top_Customers** | PivotTable — each customer's % of credit sales |
+| **Customer_Summary** | One row per customer: SUMIFS / COUNTIFS / MAXIFS / XLOOKUP, owes now, % of bill paid (red below 70%) |
+| **Monthly_Visits / Monthly_Purchases** | Customer × month grid filled by one COUNTIFS / SUMIFS formula (mixed references) |
+| **Charts** | CUST_001 falling vs CUST_002 steady |
+| **Data_Checks** | Row counts, blanks, unclear rows, purchase totals matched three ways |
+| **How_it_works** | Every formula explained in plain English |
+
+**Customer_Summary** — balance and % of bill paid per customer (red = paid under 70%):
+
+![Excel Customer_Summary sheet](images/excel_customer_summary.png)
+
+**PivotTable** (share of credit sales) and **chart** (one customer slowing down, one steady):
+
+<p>
+  <img src="images/excel_pivot_top_customers.png" alt="PivotTable: each customer's % of credit sales" height="430">
+  <img src="images/excel_chart_cust001_vs_cust002.png" alt="Chart: CUST_001 vs CUST_002 monthly purchases" width="560">
+</p>
+
+**Data checks** run before any analysis:
+
+![Excel Data_Checks sheet](images/excel_data_checks.png)
+
+## Power BI dashboard
+
+[`powerbi/ShopSense_Dashboard.pbix`](powerbi/ShopSense_Dashboard.pbix) — open it in Power BI Desktop (free). The data is stored inside the file, so it opens without MySQL; only *Refresh* needs the database.
+
+One page (screenshot at the top): KPI cards (total owed, credit sales, customers), who owes the most, who buys the most, monthly credit sales (purchases only), % of bill paid with red flags, and a customer slicer that filters every visual — pick CUST_001 to see its purchases fall to zero while it still owes ₹10,301.
 
 ## Key findings
 
@@ -61,10 +96,12 @@ On the first 12 customers my per-customer rule looked better (median 14.5 vs 20.
 ## Repo structure
 
 ```
+excel/       ShopSense_Analysis.xlsx (workbook, names removed)
+powerbi/     ShopSense_Dashboard.pbix
 data/        ledger.csv, customers.csv (anonymised)
 sql/         01_create_tables.sql, 02_load_data.sql, 03_analysis.sql, 04_full_analysis.sql
 python/      01_payment_prediction.ipynb, refresh_mysql.py, payment_predictions.csv
-images/      dashboard screenshot
+images/      dashboard and Excel screenshots
 refresh_mysql.bat   one-click: saved Excel → checks → MySQL (rolls back on any error)
 ```
 

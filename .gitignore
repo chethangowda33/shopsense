@@ -2,6 +2,9 @@
 *.xlsx
 ~$*
 *.pbix
+# ...except the public copies (names column removed; Power BI holds IDs only)
+!excel/ShopSense_Analysis.xlsx
+!powerbi/ShopSense_Dashboard.pbix
 
 # Private working files and notes
 work/
