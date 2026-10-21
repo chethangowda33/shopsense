@@ -1,0 +1,15 @@
+# Private: the workbook holds real customer names (Customers sheet, column B)
+*.xlsx
+~$*
+*.pbix
+
+# Private working files and notes
+work/
+HANDOFF.md
+SHOPSENSE_PLAN.md
+
+__pycache__/
+.ipynb_checkpoints/
+
+# Local machine helper, not part of the project
+sql/reset_mysql_root_password.ps1
