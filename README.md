@@ -1,4 +1,4 @@
-# ShopSense — analysing my father's handwritten credit book
+# ShopSense — analysing handwritten credit book
 
 My father runs a small kirana (grocery) store in Bengaluru. Regular customers buy on credit, and he writes every visit in a paper notebook (a *khata*): date + amount. Customers settle up at the start of the next month — some in full, some leaving a balance.
 
